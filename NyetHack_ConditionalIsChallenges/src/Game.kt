@@ -3,6 +3,7 @@ fun main(args: Array<String>) {
     var healthPoints = 50
     val isBlessed = true
     val isImmortal = true
+    val statusFormatString = "(HP)(A) -> H"
 
     val auraVisible = isBlessed && healthPoints > 50 || isImmortal
     val auraColor = if (auraVisible) when ((Math.pow(Math.random(), (110 - healthPoints) / 100.0) * 20).toInt()){
@@ -25,5 +26,10 @@ fun main(args: Array<String>) {
         else -> "is in awful condition!"
     }
 
-    println("${if (isBlessed) "(Aura: $auraColor)" else ""}\n$name $healthStatus")
+    var statusString = statusFormatString.replace("B", "Blessed: ${if (isBlessed) "YES" else "NO" }")
+        .replace("A", "Aura: $auraColor")
+        .replace("HP", "HP: $healthPoints")
+     statusString = Regex("H(?!P)").replace(statusString, "$name $healthStatus")
+    println(statusString)
+//    println("${if (isBlessed) "(Aura: $auraColor)" else ""}\n$name $healthStatus")
 }

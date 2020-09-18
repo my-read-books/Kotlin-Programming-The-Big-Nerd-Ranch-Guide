@@ -3,18 +3,35 @@ fun main(args: Array<String>) {
     var healthPoints = 50
     val isBlessed = true
     val isImmortal = true
-    val statusFormatString = "(HP)(A) -> H"
 
-    val auraVisible = isBlessed && healthPoints > 50 || isImmortal
-    val auraColor = if (auraVisible) when ((Math.pow(Math.random(), (110 - healthPoints) / 100.0) * 20).toInt()){
-        in 0..5 -> "red"
-        in 6..10 -> "orange"
-        in 11..15 -> "purple"
-        in 16..20 -> "green"
-        else -> "unknown"
-    } else "NONE"
+    val auraColor = auraColor(isBlessed, healthPoints, isImmortal)
 
-    val healthStatus = when (healthPoints){
+    val healthStatus = formatHealthStatus(healthPoints, isBlessed)
+
+    printPlayerStatus(auraColor, isBlessed, name, healthStatus)
+    castFireBall(5)
+    castFireBall()
+}
+
+private fun printPlayerStatus(
+    auraColor: String,
+    isBlessed: Boolean,
+    name: String,
+    healthStatus: String
+) {
+    println(
+        "(Aura: $auraColor) " +
+                "(Blessed: ${if (isBlessed) "Yes" else "No"})"
+    )
+    println("$name $healthStatus")
+}
+
+private fun auraColor(isBlessed: Boolean, healthPoints: Int, isImmortal: Boolean) =
+    if (isBlessed && healthPoints > 50 || isImmortal) "GREEN" else "NONE"
+
+
+private fun formatHealthStatus(healthPoints: Int, isBlessed: Boolean) =
+    when (healthPoints) {
         100 -> "is in excellent condition!"
         in 90..99 -> "has a few scratches."
         in 75..89 -> if (isBlessed) {
@@ -26,10 +43,15 @@ fun main(args: Array<String>) {
         else -> "is in awful condition!"
     }
 
-    var statusString = statusFormatString.replace("B", "Blessed: ${if (isBlessed) "YES" else "NO" }")
-        .replace("A", "Aura: $auraColor")
-        .replace("HP", "HP: $healthPoints")
-     statusString = Regex("H(?!P)").replace(statusString, "$name $healthStatus")
-    println(statusString)
-//    println("${if (isBlessed) "(Aura: $auraColor)" else ""}\n$name $healthStatus")
+
+private fun castFireBall(numFireBalls: Int = 2) =
+    println("A glass of Fireball springs into existence (x$numFireBalls). Level of dope = ${
+        dopeState((numFireBalls * 6.8).toInt())}")
+
+private fun dopeState(dopeLevel:Int) = when(dopeLevel){
+    in 1..10 -> "Tipsy"
+    in 11..20 -> "Sloshed"
+    in 21..30 -> "Soused"
+    in 31..40 -> "Stewed"
+    else -> "..t0aSt3d"
 }

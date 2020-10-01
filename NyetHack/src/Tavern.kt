@@ -1,43 +1,35 @@
+const val TAVERN_NAME = "Taernyl's Folly"
+
 fun main() {
-//mark class nullable by using ?    Int?    Double?
+    placeOrder("shandy, Dragon's Breath, 5.91")
+//    placeOrder("elixir,Shirley's Temple,4.12")
+}
 
-    // readLine return nullable value
-//    var beverage = readLine().capitalize()  this not compile, can't invoke method for nullable value
-
-//    BUt can use safe call
-//    var beverage = readLine()?.capitalize()
-
-//    or if want to do more than one function - use let
-//    var beverage = readLine()?.let {
-//        if (it.isNotBlank()){
-//            it.capitalize()
-//        } else {
-//            "Buttered ale"
-//        }
-//    }
-
-//    Also is operator !!   - Ignore that this var is nullable, but if value null - invoked NullPointException
-//    var beverage = readLine()!!.capitalize()
-
-//    3 way: equal if var is null
-    var beverage = readLine()
-//    beverage = null
-    if (beverage != null) {
-        beverage = beverage.capitalize()
-    } else {
-        println("I can't do that without crashing - beverage was null!")
+private fun toDragonSpeak(phrase: String) =
+    phrase.replace(Regex("[aeiouAEIOU]")) {
+        when (it.value.toLowerCase()) {
+            "a" -> "4"
+            "e" -> "3"
+            "i" -> "1"
+            "o" -> "0"
+            "u" -> "|_|"
+            else -> it.value
+        }
     }
 
-//    null coalescing operator ?:   if left operand == null, do right operation
-    val beverageServed: String = beverage ?: "Buttered Ale"
-    println(beverageServed)
+private fun placeOrder(menuData: String) {
+    val indexOfApostrophe = TAVERN_NAME.indexOf('\'')
+    val tavernMaster = TAVERN_NAME.substring(0 until indexOfApostrophe)
+    println("Madrigal speaks with $tavernMaster about their order.")
 
-//    combine
-    beverage = readLine()
-    beverage?.let {
-        beverage = it.capitalize()
-    } ?: println("I can't do that without crashing - beverage is null")
+    val (type, name, price) = menuData.replace(", ", ",").split(",")
+    val message = "Madrigal buys a $name ($type) for $price."
+    println(message)
 
-//beverage = null
-    println(beverage)
+    val phrase = if (name == "Dragon's Breath") {
+        "Madrigal exclaims: ${toDragonSpeak("Ah, delicious $name!")}"
+    } else {
+        "Madrigal exclaims: Thanks for the $name!"
+    }
+    println(phrase)
 }

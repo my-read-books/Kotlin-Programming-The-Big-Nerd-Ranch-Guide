@@ -2,7 +2,7 @@ package com.bignerdranch.nyethack
 
 fun main(args: Array<String>) {
 
-    val player = Player()
+    val player = Player("Madrigal", 89, true, false)
     player.castFireBall()
 
 
@@ -15,6 +15,7 @@ private fun printPlayerStatus(player: Player) {
                 "(Blessed: ${if (player.isBlessed) "Yes" else "No"})"
     )
     println("${player.name} ${player.healthPoints}")
+    println(player.name)
 }
 
 

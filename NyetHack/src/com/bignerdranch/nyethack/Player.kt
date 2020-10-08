@@ -4,17 +4,17 @@ import java.io.File
 
 class Player(
     name: String,
-    var healthPoints: Int = 100,
+    override var healthPoints: Int = 100,
     val isBlessed: Boolean,
     private val isImmortal: Boolean
-) {
+) : Fightable{
     var name = name
-        get() = "${field.capitalize()} of $hometown"
+        get() = field.capitalize()
         private set(value) {
             field = value.trim()
         }
 
-    val hometown by lazy {selectHometown()}
+    private val hometown by lazy {selectHometown()}
     var currentPosition = Coordinate(0, 0)
 
     init {
@@ -54,4 +54,16 @@ class Player(
         .split("\n")
         .shuffled()
         .first()
+
+    override val diceCount: Int = 3
+    override val diceSides: Int = 6
+    override fun attack(opponent: Fightable): Int {
+val damageDealt = if (isBlessed) {
+    damageRoll * 2
+} else {
+    damageRoll
+}
+        opponent.healthPoints -= damageDealt
+        return damageDealt
+    }
 }

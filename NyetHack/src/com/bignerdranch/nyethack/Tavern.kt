@@ -1,5 +1,6 @@
 package com.bignerdranch.nyethack
 
+import com.bignerdranch.nyethack.extensions.random
 import java.io.File
 
 const val TAVERN_NAME = "Taernyl's Folly"
@@ -27,8 +28,8 @@ fun main() {
     }
 
     (0..9).forEach{ _ ->
-        val first = patronList.shuffled().first()
-        val last = lastName.shuffled().first()
+        val first = patronList.random()
+        val last = lastName.random()
         val name = "$first $last"
         uniquePatrons += name
     }
@@ -38,9 +39,9 @@ fun main() {
 
     var orderCount = 0
     while (orderCount <= 9 && uniquePatrons.isNotEmpty()) {
-        val patronName = uniquePatrons.shuffled().first()
+        val patronName = uniquePatrons.random()
         placeOrder(patronName,
-            menuList.shuffled().first())
+            menuList.random())
         if (patronGold.getValue(patronName) <= 0){
             patronGold.remove(patronName)
             uniquePatrons.remove(patronName)
@@ -63,8 +64,8 @@ fun performPurchase(price: Double, patronName: String){
     val totalPurse = patronGold.getValue(patronName)
     patronGold[patronName] = totalPurse - price
 }
-private fun toDragonSpeak(phrase: String) =
-    phrase.replace(Regex("[aeiouAEIOU]")) {
+private fun String.toDragonSpeak(): String =
+    this.replace(Regex("[aeiouAEIOU]")) {
         when (it.value.toLowerCase()) {
             "a" -> "4"
             "e" -> "3"
@@ -87,7 +88,7 @@ private fun placeOrder(patronName: String, menuData: String) {
     performPurchase(price.toDouble() ?: 0.0, patronName)
 
     val phrase = if (name == "Dragon's Breath") {
-        "$patronName exclaims: ${toDragonSpeak("Ah, delicious $name!")}"
+        "$patronName exclaims: ${"Ah, delicious $name!".toDragonSpeak()}"
     } else {
         "$patronName exclaims: Thanks for the $name!"
     }
